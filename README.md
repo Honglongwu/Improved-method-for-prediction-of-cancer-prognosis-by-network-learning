@@ -1,5 +1,5 @@
 # Improved-method-for-prediction-of-cancer-prognosis-by-network-learning
-Welcome to our Git Repository!
+##Welcome to our Git Repository!
 
 ## 1.setting
 
@@ -11,7 +11,7 @@ Welcome to our Git Repository!
   tensorflow 1.6.0
   
 
-### 2.  Data
+## 2.  Data
    #### 1> Download URL
 : https://www.dropbox.com/sh/tp70gitmmtaft0l/AABLSniRI9lCo1ZqtUGL4ZOqa?dl=0
   
