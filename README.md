@@ -7,8 +7,11 @@
   Python  3.6.3
   
   numpy 1.14.2
+  
   sklearn 0.19.1
+  
   scipy 1.0.0
+  
   tensorflow 1.6.0
   
 
