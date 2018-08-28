@@ -50,14 +50,13 @@ Welcome to our Git Repository!
               gene4, gene5
          
 ## 3. Run
-   ### python ImprovedMethod.py [-t topNgeneInTTest][-i iteration][-n ngene][-d dampingfactor] mRNA CNA METHYLATION SNP CLINICAL_FILE NETWORK
+   ##### python ImprovedMethod.py [-t topNgeneInTTest][-i iteration][-n ngene][-d dampingfactor] mRNA CNA METHYLATION SNP CLINICAL_FILE NETWORK
     
     - topNgeneInTTest : N gene showed statistical differences between the means of good and poor sample groups
     - iteration: to select a stable and robust feature for random initialization of weights, N iteration in gans and pagerank
     - ngene: N biomarker
     - dampingfactor : damping factor in PageRank
-    
-    Ex) python ImprovedMethod.py BRCA_mRNA.txt BRCA_CNA.txt BRCA_methylation.txt BRCA_SNP.txt BRCA_clinical.txt FIsnetwork.txt
+ ####Ex) python ImprovedMethod.py BRCA_mRNA.txt BRCA_CNA.txt BRCA_methylation.txt BRCA_SNP.txt BRCA_clinical.txt FIsnetwork.txt
 
 
 
