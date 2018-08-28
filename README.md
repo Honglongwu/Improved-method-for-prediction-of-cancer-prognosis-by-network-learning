@@ -64,7 +64,7 @@ Welcome to our Git Repository!
     - dampingfactor : damping factor in PageRank
     
     Ex) python ImprovedMethod.py BRCA_mRNA.txt BRCA_CNA.txt BRCA_methylation.txt BRCA_SNP.txt BRCA_clinical.txt 
-        FIsnetwork.txt
+           FIsnetwork.txt
 
 
 
