@@ -1,5 +1,5 @@
 # Improved-method-for-prediction-of-cancer-prognosis-by-network-learning
-##Welcome to our Git Repository!
+## Welcome to our Git Repository!
 
 ## 1.setting
 
