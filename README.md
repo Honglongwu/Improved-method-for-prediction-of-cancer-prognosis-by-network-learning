@@ -1,5 +1,9 @@
 # Improved-method-for-prediction-of-cancer-prognosis-by-network-learning
-# ##The completed file will be uploaded on August 30, 2018.##
+
+########################################################
+# The completed file will be uploaded on August 30, 2018.
+########################################################
+
 ## Welcome to our Git Repository!
 
 ## 1.setting
