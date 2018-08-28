@@ -1,4 +1,5 @@
 # Improved-method-for-prediction-of-cancer-prognosis-by-network-learning
+# ##The completed file will be uploaded on August 30, 2018.##
 ## Welcome to our Git Repository!
 
 ## 1.setting
@@ -51,13 +52,14 @@
          
 ## 3. Run
    ##### python ImprovedMethod.py [-t topNgeneInTTest][-i iteration][-n ngene][-d dampingfactor] mRNA CNA METHYLATION SNP CLINICAL_FILE NETWORK
+  #####   Ex) python ImprovedMethod.py BRCA_mRNA.txt BRCA_CNA.txt BRCA_methylation.txt BRCA_SNP.txt BRCA_clinical.txt FIsnetwork.txt
+
+
     
     - topNgeneInTTest : N gene showed statistical differences between the means of good and poor sample groups
     - iteration: to select a stable and robust feature for random initialization of weights, N iteration in gans and pagerank
     - ngene: N biomarker
     - dampingfactor : damping factor in PageRank
- #####   Ex) python ImprovedMethod.py BRCA_mRNA.txt BRCA_CNA.txt BRCA_methylation.txt BRCA_SNP.txt BRCA_clinical.txt FIsnetwork.txt
-
 
 
 
