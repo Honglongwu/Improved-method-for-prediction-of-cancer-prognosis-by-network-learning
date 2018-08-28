@@ -12,7 +12,13 @@ Welcome to our Git Repository!
 1> Download URL
 : https://www.dropbox.com/sh/tp70gitmmtaft0l/AABLSniRI9lCo1ZqtUGL4ZOqa?dl=0
   
-  2> (1)mRNA
+ 
+ 
+ 
+ 
+ 
+ 
+ 2> (1)mRNA
         :Comma-delimited file of gene expression data 
           Ex)  ,patient1, patient2, patient3
               gene1,-4.556,-1.784,2.295
@@ -57,7 +63,8 @@ Welcome to our Git Repository!
     - ngene: N biomarker
     - dampingfactor : damping factor in PageRank
     
-    Ex) python ImprovedMethod.py BRCA_mRNA.txt BRCA_CNA.txt BRCA_methylation.txt BRCA_SNP.txt BRCA_clinical.txt FIsnetwork.txt
+    Ex) python ImprovedMethod.py BRCA_mRNA.txt BRCA_CNA.txt BRCA_methylation.txt BRCA_SNP.txt BRCA_clinical.txt 
+        FIsnetwork.txt
 
 
 
