@@ -21,7 +21,7 @@
 : https://www.dropbox.com/sh/tp70gitmmtaft0l/AABLSniRI9lCo1ZqtUGL4ZOqa?dl=0
   
    #### 2>
-   ##### (1)mRNA
+   ##### (1) mRNA
         :Comma-delimited file of gene expression data 
            Ex)  ,patient1, patient2, patient3
                gene1,-4.556,-1.784,2.295
@@ -31,23 +31,23 @@
           Ex)  , patient1, patient2, patient3
               gene1,-0.536,-0.464,8.025
               gene2,7.022,-1.033,-0.636        
-   ##### (3)METHYLATION
+   ##### (3) METHYLATION
           :Comma-delimited file of DNA methylation data
            Ex)  , patient1, patient2, patient3
                gene1,7.356,6.404,2.305
                gene2,1.002,3.082,0.006           
-   ##### (4)SNP
+   ##### (4) SNP
           :Comma-delimited file of somatic mutation data
            Ex)  , patient 1, patient 2, patient 3
                gene1,0,1,0
                gene2,0,0,4
               
-   ##### (5)CLINICAL_FILE
+   ##### (5) CLINICAL_FILE
           :Comma-delimited file of Patient's names and osevent
            Ex) patient1,0
                patient2,1
                patient3,0     
-  ##### (6)NETWORK
+  ##### (6) NETWORK
           : Comma-delimited file of PPI network
            EX) GENE,GENE
               gene1, gene2
@@ -67,10 +67,10 @@
 
 #####   Ex) python ImprovedMethod.py BRCA_mRNA.txt BRCA_CNA.txt BRCA_methylation.txt BRCA_SNP.txt BRCA_clinical.txt FIsnetwork.txt
 
-1.preprocessing data...
- loading data...
- divide samples for 10fold validation
- 0fold ttest start
+    1.preprocessing data...
+     loading data...
+     divide samples for 10fold validation
+     0fold ttest start
 
 
 
