@@ -55,7 +55,7 @@
               gene4, gene5
          
 ## 3. Run
-   ##### python ImprovedMethod.py [-t topNgeneInTTest][-i iteration][-n ngene][-d dampingfactor] mRNA CNA METHYLATION SNP CLINICAL_FILE NETWORK
+   ##### python ImprovedMethod.py [-t topNgeneInTTest][-i iteration][-n ngene][-d dampingfactor][-l limit_of_iteration] mRNA CNA METHYLATION SNP CLINICAL_FILE NETWORK
   #####   Ex) python ImprovedMethod.py BRCA_mRNA.txt BRCA_CNA.txt BRCA_methylation.txt BRCA_SNP.txt BRCA_clinical.txt FIsnetwork.txt
 
 
