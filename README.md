@@ -1,8 +1,5 @@
 # Improved-method-for-prediction-of-cancer-prognosis-by-network-learning
 
-##############################################################################################
-# The completed file will be uploaded on August 30, 2018.
-##############################################################################################
 
 ## Welcome to our Git Repository!
 
@@ -67,7 +64,7 @@
     - iteration: to select a stable and robust feature for random initialization of weights, N iteration in GANs and PageRank ( Default : 5 )
     - ngene : N genes selected as biomarker ( Default: 250 )
     - dampingfactor : damping factor in PageRank ( Default: 0.7 )
-    -limit_of_iteration : Parameter of step2,3. When step2 and step3 are repeated N times, the genes that appeared K times in N times is selected as biomarkers. The K is the limit of iteration. (Default : 5)
+    - limit_of_iteration : Parameter of step2,3. When step2 and step3 are repeated N times, the genes that appeared K times in N times is selected as biomarkers. The K is the limit of iteration. (Default : 5)
 
 
 
