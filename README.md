@@ -63,10 +63,11 @@
 
 
     
-    - topNgeneInTTest : N gene showed statistical differences between the means of good and poor sample groups
-    - iteration: to select a stable and robust feature for random initialization of weights, N iteration in gans and pagerank
-    - ngene: N biomarker
-    - dampingfactor : damping factor in PageRank
+    - topNgeneInTTest : Top N gene showed statistical differences between the means of good and poor sample groups ( Default: 400 )
+    - iteration: to select a stable and robust feature for random initialization of weights, N iteration in GANs and PageRank ( Default : 5 )
+    - ngene : N genes selected as biomarker ( Default: 250 )
+    - dampingfactor : damping factor in PageRank ( Default: 0.7 )
+    -limit_of_iteration : Parameter of step2,3. When step2 and step3 are repeated N times, the genes that appeared K times in N times is selected as biomarkers. The K is the limit of iteration. (Default : 5)
 
 
 
