@@ -65,7 +65,7 @@
     - dampingfactor : damping factor in PageRank. ( Default: 0.7 )
     - limit_of_iteration : Parameter of step2,3. When step2 and step3 are repeated N times, the genes that appeared K times in N times is selected as biomarkers. The K is the limit of iteration. ( Default : 5)
 
-###  For Example) 
+###  <For Example> 
 #### python ImprovedMethod.py BRCA_mRNA.txt BRCA_CNA.txt BRCA_methylation.txt BRCA_SNP.txt BRCA_clinical.txt FIsnetwork.txt
 
     1.preprocessing data...
