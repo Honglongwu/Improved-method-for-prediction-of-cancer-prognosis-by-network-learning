@@ -91,101 +91,101 @@
      start process  process number :  2     fold number : 0
      start process  process number :  3     fold number : 0
      start process  process number :  4     fold number : 0
-     process 0 converge  Epoch: 0000 n_iter : 0137 D_loss : -0.6936 G_loss : -0.6928
-     process 1 converge  Epoch: 0000 n_iter : 0137 D_loss : -0.6937 G_loss : -0.6926
-     process 3 converge  Epoch: 0000 n_iter : 0137 D_loss : -0.6934 G_loss : -0.693
-     process 2 converge  Epoch: 0000 n_iter : 0137 D_loss : -0.6935 G_loss : -0.6928
-     process 4 converge  Epoch: 0000 n_iter : 0137 D_loss : -0.6937 G_loss : -0.6928
+     process 0 converge  Epoch: 0002 n_iter : 0137 D_loss : -0.6936 G_loss : -0.6928
+     process 1 converge  Epoch: 0002 n_iter : 0137 D_loss : -0.6937 G_loss : -0.6926
+     process 3 converge  Epoch: 0002 n_iter : 0137 D_loss : -0.6934 G_loss : -0.693
+     process 2 converge  Epoch: 0002 n_iter : 0137 D_loss : -0.6935 G_loss : -0.6928
+     process 4 converge  Epoch: 0002 n_iter : 0137 D_loss : -0.6937 G_loss : -0.6928
      start process  process number :  0     fold number : 1
      start process  process number :  1     fold number : 1
      start process  process number :  2     fold number : 1
      start process  process number :  3     fold number : 1
      start process  process number :  4     fold number : 1
-     process 4 converge  Epoch: 0000 n_iter : 0138 D_loss : -0.6934 G_loss : -0.6933
-     process 3 converge  Epoch: 0000 n_iter : 0138 D_loss : -0.6933 G_loss : -0.6931
-     process 2 converge  Epoch: 0000 n_iter : 0138 D_loss : -0.6932 G_loss : -0.6934
-     process 0 converge  Epoch: 0000 n_iter : 0138 D_loss : -0.6935 G_loss : -0.693
-     process 1 converge  Epoch: 0000 n_iter : 0138 D_loss : -0.6934 G_loss : -0.6931
+     process 4 converge  Epoch: 0002 n_iter : 0138 D_loss : -0.6934 G_loss : -0.6933
+     process 3 converge  Epoch: 0002 n_iter : 0138 D_loss : -0.6933 G_loss : -0.6931
+     process 2 converge  Epoch: 0002 n_iter : 0138 D_loss : -0.6932 G_loss : -0.6934
+     process 0 converge  Epoch: 0002 n_iter : 0138 D_loss : -0.6935 G_loss : -0.693
+     process 1 converge  Epoch: 0002 n_iter : 0138 D_loss : -0.6934 G_loss : -0.6931
      start process  process number :  0     fold number : 2
      start process  process number :  1     fold number : 2
      start process  process number :  2     fold number : 2
      start process  process number :  3     fold number : 2
      start process  process number :  4     fold number : 2
-     process 1 converge  Epoch: 0000 n_iter : 0138 D_loss : -0.6932 G_loss : -0.6932
-     process 2 converge  Epoch: 0000 n_iter : 0138 D_loss : -0.6934 G_loss : -0.693
-     process 4 converge  Epoch: 0000 n_iter : 0138 D_loss : -0.6935 G_loss : -0.693
-     process 0 converge  Epoch: 0000 n_iter : 0138 D_loss : -0.693 G_loss : -0.6934
-     process 3 converge  Epoch: 0000 n_iter : 0138 D_loss : -0.6934 G_loss : -0.693
+     process 1 converge  Epoch: 0002 n_iter : 0138 D_loss : -0.6932 G_loss : -0.6932
+     process 2 converge  Epoch: 0002 n_iter : 0138 D_loss : -0.6934 G_loss : -0.693
+     process 4 converge  Epoch: 0002 n_iter : 0138 D_loss : -0.6935 G_loss : -0.693
+     process 0 converge  Epoch: 0002 n_iter : 0138 D_loss : -0.693 G_loss : -0.6934
+     process 3 converge  Epoch: 0002 n_iter : 0138 D_loss : -0.6934 G_loss : -0.693
      start process  process number :  0     fold number : 3
      start process  process number :  1     fold number : 3
      start process  process number :  2     fold number : 3
      start process  process number :  3     fold number : 3
      start process  process number :  4     fold number : 3
-     process 0 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6931 G_loss : -0.6932
-     process 1 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6926 G_loss : -0.6937
-     process 2 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6926 G_loss : -0.6937
-     process 3 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6927 G_loss : -0.6936
-     process 4 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6931 G_loss : -0.6932
+     process 0 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6931 G_loss : -0.6932
+     process 1 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6926 G_loss : -0.6937
+     process 2 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6926 G_loss : -0.6937
+     process 3 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6927 G_loss : -0.6936
+     process 4 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6931 G_loss : -0.6932
      start process  process number :  0     fold number : 4
      start process  process number :  1     fold number : 4
      start process  process number :  2     fold number : 4
      start process  process number :  3     fold number : 4
      start process  process number :  4     fold number : 4
-     process 3 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6922 G_loss : -0.6941
-     process 4 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6928 G_loss : -0.6936
-     process 2 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6927 G_loss : -0.6936
-     process 0 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6921 G_loss : -0.6942
-     process 1 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6925 G_loss : -0.6939
+     process 3 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6922 G_loss : -0.6941
+     process 4 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6928 G_loss : -0.6936
+     process 2 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6927 G_loss : -0.6936
+     process 0 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6921 G_loss : -0.6942
+     process 1 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6925 G_loss : -0.6939
      start process  process number :  0     fold number : 5
      start process  process number :  1     fold number : 5
      start process  process number :  2     fold number : 5
      start process  process number :  3     fold number : 5
      start process  process number :  4     fold number : 5
-     process 1 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6937 G_loss : -0.6927
-     process 2 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6935 G_loss : -0.6928
-     process 0 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6931 G_loss : -0.6932
-     process 4 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6932 G_loss : -0.6931
-     process 3 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.693 G_loss : -0.6934
+     process 1 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6937 G_loss : -0.6927
+     process 2 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6935 G_loss : -0.6928
+     process 0 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6931 G_loss : -0.6932
+     process 4 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6932 G_loss : -0.6931
+     process 3 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.693 G_loss : -0.6934
      start process  process number :  0     fold number : 6
      start process  process number :  1     fold number : 6
      start process  process number :  2     fold number : 6
      start process  process number :  3     fold number : 6
      start process  process number :  4     fold number : 6
-     process 2 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.692 G_loss : -0.6943
-     process 4 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6927 G_loss : -0.6936
-     process 1 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6923 G_loss : -0.694
-     process 0 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6924 G_loss : -0.6939
-     process 3 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6923 G_loss : -0.694
+     process 2 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.692 G_loss : -0.6943
+     process 4 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6927 G_loss : -0.6936
+     process 1 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6923 G_loss : -0.694
+     process 0 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6924 G_loss : -0.6939
+     process 3 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6923 G_loss : -0.694
      start process  process number :  0     fold number : 7
      start process  process number :  1     fold number : 7
      start process  process number :  2     fold number : 7
      start process  process number :  3     fold number : 7
      start process  process number :  4     fold number : 7
-     process 0 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6923 G_loss : -0.6941
-     process 3 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6922 G_loss : -0.6942
-     process 4 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6929 G_loss : -0.6935
-     process 1 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6927 G_loss : -0.6937
-     process 2 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6924 G_loss : -0.6939
+     process 0 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6923 G_loss : -0.6941
+     process 3 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6922 G_loss : -0.6942
+     process 4 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6929 G_loss : -0.6935
+     process 1 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6927 G_loss : -0.6937
+     process 2 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6924 G_loss : -0.6939
      start process  process number :  0     fold number : 8
      start process  process number :  1     fold number : 8
      start process  process number :  2     fold number : 8
      start process  process number :  3     fold number : 8
      start process  process number :  4     fold number : 8
-     process 3 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6923 G_loss : -0.694
-     process 2 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6932 G_loss : -0.6931
-     process 4 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6923 G_loss : -0.694
-     process 0 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6923 G_loss : -0.694
-     process 1 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6928 G_loss : -0.6936
+     process 3 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6923 G_loss : -0.694
+     process 2 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6932 G_loss : -0.6931
+     process 4 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6923 G_loss : -0.694
+     process 0 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6923 G_loss : -0.694
+     process 1 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6928 G_loss : -0.6936
      start process  process number :  0     fold number : 9
      start process  process number :  1     fold number : 9
      start process  process number :  2     fold number : 9
      start process  process number :  3     fold number : 9
      start process  process number :  4     fold number : 9
-     process 4 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6934 G_loss : -0.6929
-     process 0 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6935 G_loss : -0.6928
-     process 1 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6936 G_loss : -0.6928
-     process 3 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6931 G_loss : -0.6932
-     process 2 converge  Epoch: 0000 n_iter : 0139 D_loss : -0.6935 G_loss : -0.6928
+     process 4 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6934 G_loss : -0.6929
+     process 0 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6935 G_loss : -0.6928
+     process 1 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6936 G_loss : -0.6928
+     process 3 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6931 G_loss : -0.6932
+     process 2 converge  Epoch: 0002 n_iter : 0139 D_loss : -0.6935 G_loss : -0.6928
     ----------------------------------------------------------------------------------------------------
     4. Step4 : Prognosis Prediction
      layer= [5]     alpha=  100     10fold AUC=      0.7397354497354498
