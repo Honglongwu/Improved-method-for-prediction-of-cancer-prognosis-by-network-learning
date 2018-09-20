@@ -588,7 +588,7 @@ class PM:
 		loss_val_G_list_tmp=0
 		
 		#perform GANs
-		for epoch in range(100):
+		for epoch in range(2):
 			for i in range(n_iter):
 				batch_xs = data_for_GANs[i].reshape(1,-1)
 				noise = get_noise(1, n_genes)
@@ -603,9 +603,8 @@ class PM:
 					loss_val_D_list = []
 					loss_val_G_list = []
 					
-			if loss_val_D_list_tmp <= -0.6 and loss_val_D_list_tmp >= -0.8 and loss_val_G_list_tmp <= -0.6 and loss_val_G_list_tmp >= -0.8:
-				print(' process '+str(process_number)+' converge ','Epoch:', '%04d' % epoch,'n_iter :', '%04d' % n_iter,'D_loss : {:.4}'.format(np.mean(loss_val_D_list_tmp)),'G_loss : {:.4}'.format(np.mean(loss_val_G_list_tmp)))
-				break
+		print(' process '+str(process_number)+' converge ','Epoch:', '%04d' % (epoch+1),'n_iter :', '%04d' % n_iter,'D_loss : {:.4}'.format(np.mean(loss_val_D_list_tmp)),'G_loss : {:.4}'.format(np.mean(loss_val_G_list_tmp)))
+				
 		
 		network = sess.run(reconstucted_network_adjacency_matrix*(G_W*tf.transpose(G_W)))
 		
