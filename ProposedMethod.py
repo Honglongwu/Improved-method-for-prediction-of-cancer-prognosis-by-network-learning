@@ -37,9 +37,9 @@ def main():
 		
 		score=np.zeros((len(pm.mRNA.index)))
 		output1 = Queue(); output2 = Queue(); output3 = Queue();output4 = Queue();output5 = Queue();
-	
+		output6 = Queue(); output7 = Queue(); output8 = Queue();output9 = Queue();output10 = Queue();
 		process_list = []
-		Output = [output1, output2, output3,output4,output5]
+		Output = [output1, output2, output3,output4,output5,output6, output7, output8,output9,output10]
 		for process_number in range(5) :
 			process_list.append(Process(target=pm.Learning_FIsnetwork_GANs, args=(process_number, reconstructed_FIs_perfold[foldnum],data_for_GANs,foldnum, Output[process_number])))
 
@@ -49,12 +49,8 @@ def main():
 		
 
 		result_GANs=[]
-		result_GANs.append(output1.get());
-		result_GANs.append(output2.get());
-		result_GANs.append(output3.get());
-		result_GANs.append(output4.get());
-		result_GANs.append(output5.get());
-		
+		for i in range(pm.n_iteration):
+			result_GANs.append(output[i].get());
 		
 		for process in process_list :
 			process.join()
@@ -130,7 +126,6 @@ def loading_data():
 	damping_factor=parser.parse_args().dampingfactor
 	n_iteration=parser.parse_args().interation
 	n_limit=parser.parse_args().limit_of_iteration
-	
 	return mRNA,CNA,met,snp,edges,lable,n_gene_in_ttest,n_biomarker,damping_factor, n_iteration,n_limit
 
 #Find the intersection of genes in mRNA, CNA, methylation,SNP data and FIs network and the intersection of samples from mRNA, CNA, methylation, and SNP data
@@ -289,8 +284,8 @@ def preprocessing():
 	
 	
 	
-	#Find the intersection of genes in mRNA, CNA, methylation,SNP data and FIs network and the intersection of samples from mRNA, CNA, methylation, and SNP data
-	#Then modify raw mRNA, raw CNA, raw methylation, raw SNP, and raw lable data with the intersection of the genes and the intersection of the samples.
+	#find the intersection of genes in mRNA, CNA, methylation,SNP data and FIs network and the intersection of samples from mRNA, CNA, methylation, and SNP data
+	#then modify raw mRNA, raw CNA, raw methylation, raw SNP, and raw lable data with the intersection of the genes and the intersection of the samples.
 	
 	raw_mRNA2,raw_CNA2,raw_met2,raw_snp2,edge_list,lable=intersetion_data(raw_mRNA,raw_CNA,raw_met,raw_snp,raw_edges,raw_lable)
 	
@@ -311,7 +306,7 @@ def preprocessing():
 		gene2num[gene] = i
 		num2gene[i] = gene
 		
-	#Divide samples for 10fold validation 
+	#divide samples for 10fold validation 
 	print(' divide samples for 10fold validation ')
 	good_sam,bad_sam=seperate_good_bad_patients(mRNA.columns,lable)
 	good_sam=np.array(good_sam)
@@ -330,7 +325,7 @@ def preprocessing():
 		test_samples.append(test_tmp)
 
 	
-	#Perform a t-test on samples of each fold.
+	#perform a t-test on samples of each fold.
 	mRNA_ttest=[]
 	CNA_ttest=[]
 	met_ttest=[]
@@ -346,7 +341,7 @@ def preprocessing():
 		snp_ttest.append(snp_ttmp)
 
 	
-	#Make instance of class PM
+	#make instance of class PM
 	Pm=PM(n_gene_in_ttest,n_biomarker,damping_factor, n_iteration,n_limit,mRNA,CNA,met,snp,lable,edge_list,good_train_samples,bad_train_samples,test_samples,gene2num,num2gene,mRNA_ttest,CNA_ttest,met_ttest,snp_ttest)
 	
 	return Pm
@@ -460,7 +455,7 @@ class PM:
 		#result_tmp is the data for GANs.
 		result_tmp=[]
 		
-		# for each gene in reconstructed network, select the dataset with the largest absolute value of t-test statistic.
+		#for each gene in reconstructed network, select the dataset with the largest absolute value of t-test statistic.
 		for j in networkgene:
 			genevec=[self.mRNA_ttest[foldnum].loc[j,0],self.CNA_ttest[foldnum].loc[j,0],self.met_ttest[foldnum].loc[j,0],self.snp_ttest[foldnum].loc[j,0]]
 			num=np.argmax(genevec)
@@ -493,7 +488,7 @@ class PM:
 		#make variables
 		#adjacency_matrix is the data we made in step 2-1.
 		#n_input is the number of genes in reconstructed FIs network.
-		#n_noist is the number of genes in reconstructed FIs network.
+		#n_noise is the number of genes in reconstructed FIs network.
 		
 		def prepare(adjacency_matrix,n_input,n_hidden,n_noise,stddev):
 			reconstucted_network_adjacency_matrix = tf.constant(adjacency_matrix)
@@ -515,7 +510,7 @@ class PM:
 		def generator(G_W,reconstucted_network_adjacency_matrix,noise_z):
 			output = tf.nn.relu(tf.matmul(noise_z, reconstucted_network_adjacency_matrix*(G_W*tf.transpose(G_W))))	   
 			return output
-		#generator of GANs 
+		#discriminator of GANs 
 		def discriminator(inputs,D_W1,D_W2):
 			hidden = tf.nn.relu(tf.matmul(inputs, D_W1))
 			output = tf.nn.sigmoid(tf.matmul(hidden, D_W2))
@@ -618,7 +613,7 @@ class PM:
 	  
 		output.put(result)
 	
-	#perform pagerank
+	#perform PageRank
 	#weight is the weights which is obtained from Step2.
 	def pagerank(self,weight):
 	
@@ -648,7 +643,7 @@ class PM:
 		n_genes=len(self.mRNA.index)
 		result_mat = mk_graph_with_weight(n_genes,weight)
 
-	  ## 4. PageRank
+		#perform PageRank
 		def perform_pagerank(matrix, d, threshold):
 			n_genes = matrix.shape[0]
 			score = np.ones(n_genes) / n_genes
@@ -662,7 +657,7 @@ class PM:
 				else:
 					tmp = deepcopy(score)
 			return score
-		#Perform pagerank
+		#perform PageRank
 		score = perform_pagerank(result_mat, damping_factor, threshold)
 		
 		#sort gene by pagerank score
@@ -737,7 +732,7 @@ class PM:
 			#snp_t is the list of genes which have high absolute values of t-statistics in SNP data and were used to reconstruct FIs network in step 1.
 			snp_t=snp_ttest.index[:self.n_gene_in_ttest]
 			
-			# make union of mRNA_t,CNA_t,met_t and snp_t
+			#make union of mRNA_t,CNA_t,met_t and snp_t
 			selected_by_ttest.update(mRNA_t)
 			selected_by_ttest.update(CNA_t)
 			selected_by_ttest.update(met_t)
