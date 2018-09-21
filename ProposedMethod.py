@@ -38,7 +38,7 @@ def main():
 		score=np.zeros((len(pm.mRNA.index)))
 		output1 = Queue(); output2 = Queue(); output3 = Queue();output4 = Queue();output5 = Queue();
 		process_list = []
-		Output = [output1, output2, output3,output4,output5,output6, output7, output8,output9,output10]
+		Output = [output1, output2, output3,output4,output5]
 		for process_number in range(5) :
 			process_list.append(Process(target=pm.Learning_FIsnetwork_GANs, args=(process_number, reconstructed_FIs_perfold[foldnum],data_for_GANs,foldnum, Output[process_number])))
 
@@ -56,7 +56,7 @@ def main():
 		
 		for process in process_list :
 			process.join()
-		for i in range(pm.n_iteration):
+		for i in range(pm.n_experiment):
 			pagerank_genes=pm.pagerank(result_GANs[i])
 			for k in pagerank_genes:
 				score[pm.gene2num[k]]=score[pm.gene2num[k]]+1
@@ -73,7 +73,6 @@ def main():
 """
 	From here,Functions for preprocessing
 	this step includes loading data,intersectioning data,z-scoring for each sample and t-test for each fold
-
 """
 
 #Read a comma-delimited text file.
@@ -99,9 +98,9 @@ def loading_data():
 	
 	parser.add_argument('-t','--topt',type=int, default=400, help="Parameter of step1.top N genes with a large difference between good and bad patients in the t-test.Default is 400.")
 	parser.add_argument('-i','--interation',type=int, default=5, help="Parameter of step2 and step3. To select a stable and robust feature for weight random initialization, the number of times to apply the pagerank and learn reconstructed FIs network using GANs repeatedly. Default is 5")
-	parser.add_argument('-n','--ngene',type=int, default=250, help="Parameter of step3. Number of biomarkers to select for each iteration")
+	parser.add_argument('-n','--ngene',type=int, default=250, help="Parameter of step3. Number of biomarkers to select for each experiment")
 	parser.add_argument('-d','--dampingfactor',type=float, default=0.7, help="Parameter of step3. this is damping factor using in pagerank algorithm") 
-	parser.add_argument('-l','--limit_of_iteration',type=int, default=5, help="Parameter of step2,3. When step2 and step3 are repeated N times, the genes that appeared K times in N times is selected as biomarkers. The K is the limit of iteration.") 
+	parser.add_argument('-l','--limit_of_experiment',type=int, default=5, help="Parameter of step2,3. When step2 and step3 are repeated N times, the genes that appeared K times in N times is selected as biomarkers. The K is the limit of experiment.") 
 	
 	mRNA=read_file(parser.parse_args().mRNA)
 	CNA=read_file(parser.parse_args().CNA)
@@ -126,9 +125,9 @@ def loading_data():
 	n_gene_in_ttest=parser.parse_args().topt
 	n_biomarker=parser.parse_args().ngene
 	damping_factor=parser.parse_args().dampingfactor
-	n_iteration=parser.parse_args().interation
-	n_limit=parser.parse_args().limit_of_iteration
-	return mRNA,CNA,met,snp,edges,lable,n_gene_in_ttest,n_biomarker,damping_factor, n_iteration,n_limit
+	n_experiment=parser.parse_args().interation
+	n_limit=parser.parse_args().limit_of_experiment
+	return mRNA,CNA,met,snp,edges,lable,n_gene_in_ttest,n_biomarker,damping_factor, n_experiment,n_limit
 
 #Find the intersection of genes in mRNA, CNA, methylation,SNP data and FIs network and the intersection of samples from mRNA, CNA, methylation, and SNP data
 def intersetion_data(raw_mRNA,raw_CNA,raw_met,raw_snp,raw_edges,raw_clinical_file):
@@ -282,7 +281,7 @@ def preprocessing():
 	print('1.preprocessing data...')
 	#download mRNA,CNA,methylation,SNP,lable,FIs network data and parameters
 	print(' loading data...')
-	raw_mRNA,raw_CNA,raw_met,raw_snp,raw_edges,raw_lable,n_gene_in_ttest,n_biomarker,damping_factor, n_iteration,n_limit=loading_data()
+	raw_mRNA,raw_CNA,raw_met,raw_snp,raw_edges,raw_lable,n_gene_in_ttest,n_biomarker,damping_factor, n_experiment,n_limit=loading_data()
 	
 	
 	
@@ -344,7 +343,7 @@ def preprocessing():
 
 	
 	#make instance of class PM
-	Pm=PM(n_gene_in_ttest,n_biomarker,damping_factor, n_iteration,n_limit,mRNA,CNA,met,snp,lable,edge_list,good_train_samples,bad_train_samples,test_samples,gene2num,num2gene,mRNA_ttest,CNA_ttest,met_ttest,snp_ttest)
+	Pm=PM(n_gene_in_ttest,n_biomarker,damping_factor, n_experiment,n_limit,mRNA,CNA,met,snp,lable,edge_list,good_train_samples,bad_train_samples,test_samples,gene2num,num2gene,mRNA_ttest,CNA_ttest,met_ttest,snp_ttest)
 	
 	return Pm
 
@@ -362,7 +361,7 @@ class PM:
 	#initialize variables
 	"""
 		self.n_gene_in_ttest is a parameter which is the number of genes which have high absolute values of t-statistics to be used in step1.
-		self.n_iteration is the number of times to repeat step2 and step3.
+		self.n_experiment is the number of times to repeat step2 and step3.
 		self.n_biomarker is the nuber of genes which are selected as biomarkers
 		self.limit is Parameter of step2,3. When step2 and step3 are repeated N times, the genes that appeared K times in N times is selected as biomarkers. The K is the limit."
 		self.damping_factor is damping factor using in pagerank algorithm
@@ -382,9 +381,9 @@ class PM:
 		self.met_ttest=met_ttest is a list containing DataFrames that are the result of t-test in methylation data per fold at the preprocessing stage.
 		self.snp_ttest=snp_ttest is a list containing DataFrames that are the result of t-test in SNP data per fold at the preprocessing stage.
 	"""
-	def __init__(self,n_gene_in_ttest,n_biomarker,damping_factor, n_iteration,n_limit,mRNA,CNA,met,snp,lable,edge_list,good_train_samples,bad_train_samples,test_samples,gene2num,num2gene,mRNA_ttest,CNA_ttest,met_ttest,snp_ttest):
+	def __init__(self,n_gene_in_ttest,n_biomarker,damping_factor, n_experiment,n_limit,mRNA,CNA,met,snp,lable,edge_list,good_train_samples,bad_train_samples,test_samples,gene2num,num2gene,mRNA_ttest,CNA_ttest,met_ttest,snp_ttest):
 		self.n_gene_in_ttest=n_gene_in_ttest
-		self.n_iteration=n_iteration
+		self.n_experiment=n_experiment
 		self.n_biomarker=n_biomarker
 		self.limit=n_limit
 		self.damping_factor=damping_factor
