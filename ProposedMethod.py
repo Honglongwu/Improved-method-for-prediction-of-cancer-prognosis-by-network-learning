@@ -50,7 +50,7 @@ def main():
 
 		result_GANs=[]
 		for i in range(pm.n_iteration):
-			result_GANs.append(output[i].get());
+			result_GANs.append(Output[i].get());
 		
 		for process in process_list :
 			process.join()
