@@ -37,7 +37,6 @@ def main():
 		
 		score=np.zeros((len(pm.mRNA.index)))
 		output1 = Queue(); output2 = Queue(); output3 = Queue();output4 = Queue();output5 = Queue();
-		output6 = Queue(); output7 = Queue(); output8 = Queue();output9 = Queue();output10 = Queue();
 		process_list = []
 		Output = [output1, output2, output3,output4,output5,output6, output7, output8,output9,output10]
 		for process_number in range(5) :
@@ -49,8 +48,11 @@ def main():
 		
 
 		result_GANs=[]
-		for i in range(pm.n_iteration):
-			result_GANs.append(Output[i].get());
+		result_GANs.append(output1.get());
+		result_GANs.append(output2.get());
+		result_GANs.append(output3.get());
+		result_GANs.append(output4.get());
+		result_GANs.append(output5.get());
 		
 		for process in process_list :
 			process.join()
