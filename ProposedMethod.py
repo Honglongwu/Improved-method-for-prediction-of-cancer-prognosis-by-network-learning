@@ -22,11 +22,9 @@ np.random.seed(0)
 
 def main():
   
-	#preprocossing 
+	#preprocossing.
 	pm=preprocessing() 
-	#step1
 	print("----------------------------------------------------------------------------------------------------")
-	print('limit',pm.limit)
 	print("2. Step 1 : reconstructing FIs network")
 	reconstructed_FIs_perfold,gene_in_reconstructed_FIs_perfold=pm.reconstruct_FIs_network()
 	print("----------------------------------------------------------------------------------------------------")
@@ -36,10 +34,16 @@ def main():
 		data_for_GANs=pm.mk_data_for_GANs(gene_in_reconstructed_FIs_perfold[foldnum],foldnum)
 		
 		score=np.zeros((len(pm.mRNA.index)))
+		# multiprocessing.
 		output1 = Queue(); output2 = Queue(); output3 = Queue();output4 = Queue();output5 = Queue();
 		output6 = Queue(); output7 = Queue(); output8 = Queue();output9 = Queue();output10 = Queue();
+		output11 = Queue(); output12 = Queue(); output13 = Queue();output14 = Queue();output15 = Queue();
+		output16 = Queue(); output17 = Queue(); output18 = Queue();output19 = Queue();output20 = Queue();
 		process_list = []
-		Output = [output1, output2, output3,output4,output5,output6, output7, output8,output9,output10]
+		Output = [output1, output2, output3,output4,output5,output6, output7, output8,output9,output10,output11, output12, output13,output14,output15,output16, output17, output18,output19,output20]
+		
+		#To select a stable and robust feature for random initialization of weights, repeatedly experiment with the reconstructed network learning-phase using GANs and the PageRank process (t times). 
+		#t is n_experiment.
 		for process_number in range(pm.n_experiment) :
 			process_list.append(Process(target=pm.Learning_FIsnetwork_GANs, args=(process_number, reconstructed_FIs_perfold[foldnum],data_for_GANs,foldnum, Output[process_number])))
 
@@ -47,13 +51,16 @@ def main():
 			p.start()	 
 
 		
-
+		
 		result_GANs=[]
 		for i in range(pm.n_experiment):
 			result_GANs.append(Output[i].get());
 		
 		for process in process_list :
 			process.join()
+		#select the genes that appeared more than b times in t experiments as biomarkers.
+		#t is n_experiment.
+		#b is limit.
 		for i in range(pm.n_experiment):
 			pagerank_genes=pm.pagerank(result_GANs[i])
 			for k in pagerank_genes:
@@ -63,6 +70,14 @@ def main():
 			if i >=pm.limit:
 				biomarker.append(j)
 		biomarker_perfold.append(biomarker)
+		
+	#save biomarker
+	f = open("ProposedMethod_biomarker_per_fold.txt", 'w')
+	for foldnum in range(10):
+		f.write("\nFold Number(10 fold validation) : %d\n" % foldnum)
+		for gene in biomarker_perfold[foldnum]:
+			f.write("%s\t" % gene)
+	f.close()
 	print("----------------------------------------------------------------------------------------------------")
 	print("4. Step4 : Prognosis Prediction")
 	pm.auc(reconstructed_FIs_perfold,biomarker_perfold)
@@ -74,7 +89,7 @@ def main():
 
 """
 
-#Read a comma-delimited text file.
+#read a comma-delimited text file.
 def read_file(file):
 	with open(file, 'r') as fop :
 		data= []
@@ -84,9 +99,9 @@ def read_file(file):
 	data=DataFrame(data[1:,1:],columns=data[0,1:],index=data[1:,0])
 	return data
 
-#download mRNA,CNA,methylation,SNP,lable,FIs network data and parameters
+#download mRNA,CNA,methylation,SNP,clinical file(lable),FIs network and parameters.
 def loading_data():		
-	#Download mRNA,CNA,methylation and SNP
+	#download mRNA,CNA,methylation and SNP.
 	parser=argparse.ArgumentParser(description="Improved method for prediction of cancer prognosis using network and multi-omics data")					
 	parser.add_argument('mRNA', type=str, help="gene expression data")
 	parser.add_argument('CNA', type=str, help="copy number data")
@@ -106,13 +121,13 @@ def loading_data():
 	met=read_file(parser.parse_args().METHYLATION)
 	snp=read_file(parser.parse_args().SNP)
 	
-	#Download FIS network.
+	#download FIS network.
 	with open(parser.parse_args().NETWORK, 'r') as fop :
 		edges = []
 		for line in fop :
 			edges.append(line.strip().split(','))
 			
-	#Download lable about sample
+	#download lable (lable 0: patient who has good prognosis,lable 1: patient who has bad prognosis).
 	with open(parser.parse_args().CLINICAL_FILE, 'r') as fop :
 		cli = []
 		for line in fop :
@@ -120,7 +135,7 @@ def loading_data():
 	cli=np.array(cli)
 	lable=Series(cli[:,1],index=cli[:,0])
 	
-	#Download parameters
+	#download parameters
 	n_gene_in_ttest=parser.parse_args().topt
 	n_biomarker=parser.parse_args().ngene
 	damping_factor=parser.parse_args().dampingfactor
@@ -128,14 +143,14 @@ def loading_data():
 	n_limit=parser.parse_args().limit_of_experiment
 	return mRNA,CNA,met,snp,edges,lable,n_gene_in_ttest,n_biomarker,damping_factor, n_experiment,n_limit
 
-#Find the intersection of genes in mRNA, CNA, methylation,SNP data and FIs network and the intersection of samples from mRNA, CNA, methylation, and SNP data
+#find the intersection of genes in mRNA, CNA, methylation,SNP data and FIs network and the intersection of samples in mRNA, CNA, methylation, and SNP data.
 def intersetion_data(raw_mRNA,raw_CNA,raw_met,raw_snp,raw_edges,raw_clinical_file):
-	#Find the intersection of genes in mRNA, CNA, methylation, and SNP data
+	#find the intersection of genes in mRNA, CNA, methylation, and SNP data.
 	co_gene=[x for x in raw_mRNA.index if x in raw_CNA.index]
 	co_gene=[x for x in raw_met.index if x in co_gene]
 	co_gene=[x for x in raw_snp.index if x in co_gene]
 
-	#Find the intersection between the genes from the previous step and the genes in the FIs network
+	#find the intersection between the genes from the previous step and the genes in the FIs network.
 	edge_list = []
 	ppi_genes = set()
 	for edge in raw_edges:
@@ -147,12 +162,12 @@ def intersetion_data(raw_mRNA,raw_CNA,raw_met,raw_snp,raw_edges,raw_clinical_fil
 			ppi_genes.add(gene2)
 	ppi_genes = list(ppi_genes)
 
-	#Find the intersection of samples from mRNA, CNA, methylation, and SNP data
+	#find the intersection of samples in mRNA, CNA, methylation, and SNP data.
 	co_sample=[x for x in raw_mRNA.columns if x in raw_CNA.columns]
 	co_sample=[x for x in raw_met.columns if x in co_sample]
 	co_sample=[x for x in raw_snp.columns if x in co_sample]
 
-	#Modify raw mRNA, raw CNA, raw methylation, raw SNP, and raw lable data with the intersection of the genes and the intersection of the samples.
+	#modify raw mRNA, raw CNA, raw methylation, raw SNP, and raw lable data with the intersection of the genes and the intersection of the samples.
 	mRNA=raw_mRNA.loc[ppi_genes,co_sample]
 	CNA=raw_CNA.loc[ppi_genes,co_sample]
 	met=raw_met.loc[ppi_genes,co_sample]
@@ -161,7 +176,7 @@ def intersetion_data(raw_mRNA,raw_CNA,raw_met,raw_snp,raw_edges,raw_clinical_fil
 	
 	return mRNA,CNA,snp,met,edge_list,lable	
 
-#normalizing data for each sample by z-scoring
+#normalizing data for each sample by z-scoring.
 def zscore(data) :
 	len_row_gene = data.shape[0]
 	len_column_sample = data.shape[1]
@@ -178,7 +193,7 @@ def zscore(data) :
 
 	return zscored_data
 	
-#Seperate the patients who have bad prognosis and the patients who have good prognosis	
+#seperate patients who have bad prognosis and patients who have good prognosis.	
 def seperate_good_bad_patients(sampleList,lable):
 	good_samples=[]
 	bad_samples=[]
@@ -188,6 +203,7 @@ def seperate_good_bad_patients(sampleList,lable):
 		elif j=='1':
 			bad_samples.append(i)
 		else:
+			#exception Handling
 			print('#########################################################################################################################')
 			print('									error!lable can be only 0 or 1')
 			print('									You have to stop this process!')
@@ -196,12 +212,12 @@ def seperate_good_bad_patients(sampleList,lable):
 
 
 
-#perfom t-test between patients who have poor prognosis and patient who have good prognosis for each dataset.
-#num2gene is Series in which data is a gene and index is a gene sequence number.
-#good_sam is the list of samples which have good prognosis and bad_sam is the lisf of samples which have bad prognosis. 
+#perfom t-test comparing patients who have poor prognosis and patient who have good prognosis for each dataset.
+#num2gene is Series in which data is a gene and index is a gene number.
+#good_sam is the list of samples which have good prognosis and bad_sam is the list of samples which have bad prognosis. 
 def t_test(mRNA,CNA,met,snp,num2gene,good_sam,bad_sam):
 		
-		#Exception Handling
+		#exception Handling
 		if len(good_sam)==0:
 			print('#########################################################################################################################')
 			print('									Error!there is no good prognostic patient')
@@ -217,7 +233,7 @@ def t_test(mRNA,CNA,met,snp,num2gene,good_sam,bad_sam):
 		n_genes=len(mRNA.index)
 		genes=mRNA.index
 		
-		#Perform a t-test for each gene in mRNA data between a poor prognosis patient group and a good prognosis patient group 
+		#perform a t-test for each gene in mRNA data conparing a poor prognostic patient group and a good prognostic patient group. 
 		t_scores = np.zeros(n_genes, dtype=np.float32)	
 		for i in range(n_genes):
 			poor_data = mRNA.loc[num2gene[i], bad_sam].values.astype(np.float64)
@@ -228,10 +244,11 @@ def t_test(mRNA,CNA,met,snp,num2gene,good_sam,bad_sam):
 				t_scores[i] = t_statistic
 			else :
 				t_scores[i] = t_statistic
-		# t_score is DataFrame in which Data is the t-test statistics in mRNA data and index is gene 
+		
+		#t_scores is DataFrame in which data is a list of the t-test statistics in mRNA data and index is a list of genes. 
 		t_scores=DataFrame(t_scores,index=genes)
 		
-		#Perform a t-test for each gene in CNA data between a poor prognosis patient group and a good prognosis patient group
+		#perform a t-test for each gene in CNA data conparing a poor prognosis patient group and a good prognosis patient group.
 		t_scores2 = np.zeros(n_genes, dtype=np.float32)	
 		for i in range(n_genes):
 			poor_data = CNA.loc[num2gene[i], bad_sam].values.astype(np.float64)
@@ -242,10 +259,10 @@ def t_test(mRNA,CNA,met,snp,num2gene,good_sam,bad_sam):
 				t_scores2[i] = t_statistic
 			else :
 				t_scores2[i] = t_statistic
-		# t_score2 is DataFrame in which Data is the t-test statistics in CNA data and index is gene 
+		#t_scores2 is DataFrame in which data is a list of the t-test statistics in CNA data and index is a list of genes.  
 		t_scores2=DataFrame(t_scores2,index=genes)
 		
-		#Perform a t-test for each gene in methylation data between a poor prognosis patient group and a good prognosis patient group
+		#Perform a t-test for each gene in methylation data conparing a poor prognosis patient group and a good prognosis patient group.
 		t_scores3= np.zeros(n_genes, dtype=np.float32)	
 		for i in range(n_genes):
 			poor_data = met.loc[num2gene[i], bad_sam].values.astype(np.float64)
@@ -256,10 +273,10 @@ def t_test(mRNA,CNA,met,snp,num2gene,good_sam,bad_sam):
 				t_scores3[i] = t_statistic
 			else :
 				t_scores3[i] = t_statistic
-		# t_score3 is DataFrame in which Data is the t-test statistics in methylation data and index is gene 
+		#t_scores3 is DataFrame in which data is a list of the t-test statistics in methylation data and index is a list of genes. 
 		t_scores3=DataFrame(t_scores3,index=genes)
 		
-		#Perform a t-test for each gene in SNP data between a poor prognosis patient group and a good prognosis patient group
+		#Perform a t-test for each gene in SNP data conparing a poor prognosis patient group and a good prognosis patient group.
 		t_scores4= np.zeros(n_genes, dtype=np.float32)	
 		for i in range(n_genes):
 			poor_data = snp.loc[num2gene[i], bad_sam].values.astype(np.float64)
@@ -270,22 +287,22 @@ def t_test(mRNA,CNA,met,snp,num2gene,good_sam,bad_sam):
 				t_scores4[i] = t_statistic
 			else :
 				t_scores4[i] = t_statistic
-		# t_score4 is DataFrame in which Data is the t-test statistics in SNP data and index is gene
+		#t_scores4 is DataFrame in which data is a list of the t-test statistics in SNP data and index is a list of genes.
 		t_scores4=DataFrame(t_scores4,index=genes)
 		
 		return t_scores,t_scores2,t_scores3,t_scores4
 
-#perform preprocessing		
+#perform preprocessing.		
 def preprocessing():
 	print('1.preprocessing data...')
-	#download mRNA,CNA,methylation,SNP,lable,FIs network data and parameters
+	#download mRNA,CNA,methylation,SNP,lable,FIs network data and parameters.
 	print(' loading data...')
 	raw_mRNA,raw_CNA,raw_met,raw_snp,raw_edges,raw_lable,n_gene_in_ttest,n_biomarker,damping_factor, n_experiment,n_limit=loading_data()
 	
 	
 	
-	#Find the intersection of genes in mRNA, CNA, methylation,SNP data and FIs network and the intersection of samples from mRNA, CNA, methylation, and SNP data
-	#Then modify raw mRNA, raw CNA, raw methylation, raw SNP, and raw lable data with the intersection of the genes and the intersection of the samples.
+	#find the intersection of genes in mRNA, CNA, methylation,SNP data and FIs network and the intersection of samples from mRNA, CNA, methylation, and SNP data.
+	#then modify raw mRNA, raw CNA, raw methylation, raw SNP, and raw lable data with the intersection of the genes and the intersection of the samples.
 	
 	raw_mRNA2,raw_CNA2,raw_met2,raw_snp2,edge_list,lable=intersetion_data(raw_mRNA,raw_CNA,raw_met,raw_snp,raw_edges,raw_lable)
 	
@@ -299,14 +316,14 @@ def preprocessing():
 	met = DataFrame(metvalues, index=raw_met2.index, columns=raw_met2.columns)
 	snp = DataFrame(snpvalues, index=raw_snp2.index, columns=raw_snp2.columns)
 	
-	#gene2num and num2gene are for mapping between genes and numbers
+	#gene2num and num2gene are for mapping between genes and numbers.
 	gene2num = {}
 	num2gene = {}
 	for i, gene in enumerate(mRNA.index):
 		gene2num[gene] = i
 		num2gene[i] = gene
 		
-	#Divide samples for 10fold validation 
+	#divide samples for 10fold validation 
 	print(' divide samples for 10fold validation ')
 	good_sam,bad_sam=seperate_good_bad_patients(mRNA.columns,lable)
 	good_sam=np.array(good_sam)
@@ -325,7 +342,7 @@ def preprocessing():
 		test_samples.append(test_tmp)
 
 	
-	#Perform a t-test on samples of each fold.
+	#perform a t-test for each fold.
 	mRNA_ttest=[]
 	CNA_ttest=[]
 	met_ttest=[]
@@ -341,44 +358,44 @@ def preprocessing():
 		snp_ttest.append(snp_ttmp)
 
 	
-	#Make instance of class PM
+	#make instance of class PM.
 	Pm=PM(n_gene_in_ttest,n_biomarker,damping_factor, n_experiment,n_limit,mRNA,CNA,met,snp,lable,edge_list,good_train_samples,bad_train_samples,test_samples,gene2num,num2gene,mRNA_ttest,CNA_ttest,met_ttest,snp_ttest)
 	
 	return Pm
 
 """
-	From here,Functions for Step1,2,3 and 4 in paper
-	step1 is recostructing FIs network
-	step2 is learning the network
-	step3 is Feature selection using PageRank
-	step4 is prognosis predicition
+	From here,Functions for Step 1,2,3 and 4 in paper.
+	step1 is recostructing FIs network.
+	step2 is learning the network.
+	step3 is Feature selection using PageRank.
+	step4 is prognosis predicition.
 """	
 
-#PM is the class which has multi-omics Data , parameters ,series to map between genes and numbers, sample for 10 fold validation , t-statistics in each fold and functions to Step1, 2, 3, and 4
+#PM is the class which has multi-omics Data, parameters, series to map between genes and gene numbers, samples for 10 fold validation , t-statistics for each fold and functions for Step 1, 2, 3, and 4.
 class PM:
 
-	#initialize variables
+	#initialize variables.
 	"""
-		self.n_gene_in_ttest is a parameter which is the number of genes which have high absolute values of t-statistics to be used in step1.
-		self.n_experiment is the number of times to repeat step2 and step3.
-		self.n_biomarker is the nuber of genes which are selected as biomarkers
-		self.limit is Parameter of step2,3. When step2 and step3 are repeated N times, the genes that appeared K times in N times is selected as biomarkers. The K is the limit."
-		self.damping_factor is damping factor using in pagerank algorithm
-		self.mRNA is mRNA data
-		self.CNA is CNA data
-		self.met is methylation data
-		self.snp is SNP data
-		self.lable is lable of samples
-		self.edge_list is edges in FIs network
-		self.good_train_samples is a list containing lists of good prognostic samples per fold for 10 fold validation.
-		self.bad_train_samples is a list containing lists of bad prognostic samples per fold for 10 fold validation.
-		self.test_samples a list containing lists of test samples per fold for 10 fold validation.
-		self.gene2num is series for mapping from genes to numbers.
-		self.num2gene is series for mapping from numbers to genes.
-		self.mRNA_ttest is a list containing DataFrames that are the result of t-test in mRNA data per fold at the preprocessing stage.
-		self.CNA_ttest=CNA_ttest is a list containing DataFrames that are the result of t-test in CNA data per fold at the preprocessing stage.
-		self.met_ttest=met_ttest is a list containing DataFrames that are the result of t-test in methylation data per fold at the preprocessing stage.
-		self.snp_ttest=snp_ttest is a list containing DataFrames that are the result of t-test in SNP data per fold at the preprocessing stage.
+		self.n_gene_in_ttest is a parameter which is the number of genes which have high absolute values of t-statistics to be used in step 1.
+		self.n_experiment is parameter which is the number of times to repeat step2 and step3.
+		self.n_biomarker is parameter which is the number of genes which are selected as biomarkers.
+		self.limit is parameter of step 2,3. when step2 and step3 are repeated t times(t=n_experiment), the genes that appeared b times in t times is selected as biomarkers. The b is the limit.
+		self.damping_factor is damping factor using in pagerank algorithm.
+		self.mRNA is mRNA data.
+		self.CNA is CNA data.
+		self.met is methylation data.
+		self.snp is SNP data.
+		self.lable is lable of samples (clinical data).
+		self.edge_list is edges in FIs network.
+		self.good_train_samples is a list containing lists of good prognostic training samples in each fold for 10 fold validation.
+		self.bad_train_samples is a list containing lists of bad prognostic trainging samples in each fold for 10 fold validation.
+		self.test_samples a list containing lists of test samples in each fold for 10 fold validation.
+		self.gene2num is series for mapping from genes to gene numbers.
+		self.num2gene is series for mapping from gene numbers to genes.
+		self.mRNA_ttest is a list containing DataFrames that are the results of t-test in mRNA data per fold at the preprocessing stage.
+		self.CNA_ttest is a list containing DataFrames that are the results of t-test in CNA data per fold at the preprocessing stage.
+		self.met_ttest is a list containing DataFrames that are the results of t-test in methylation data per fold at the preprocessing stage.
+		self.snp_ttest is a list containing DataFrames that are the results of t-test in SNP data per fold at the preprocessing stage.
 	"""
 	def __init__(self,n_gene_in_ttest,n_biomarker,damping_factor, n_experiment,n_limit,mRNA,CNA,met,snp,lable,edge_list,good_train_samples,bad_train_samples,test_samples,gene2num,num2gene,mRNA_ttest,CNA_ttest,met_ttest,snp_ttest):
 		self.n_gene_in_ttest=n_gene_in_ttest
@@ -402,9 +419,9 @@ class PM:
 		self.met_ttest=met_ttest
 		self.snp_ttest=snp_ttest
 	
-	#Step1. reconstruct FIs network
+	#step 1. reconstruct FIs network.
 	def reconstruct_FIs_network(self):
-		#gene_in_reconstructed_network_10fold is list containing sets of the genes in reconstructed network per fold.
+		#gene_in_reconstructed_network_10fold is list containing lists of the edges in reconstructed network per fold.
 		reconstructed_network_10fold=[]
 		
 		#gene_in_reconstructed_network_10fold is list containing sets of the genes in reconstructed network per fold.
@@ -413,26 +430,26 @@ class PM:
 		#reconstruct network per fold.
 		for foldnum in range(10):
 			
-			#reconstructed_network is set of the edges in reconstructed network.
+			#reconstructed_network is list of the edges in reconstructed network.
 			reconstructed_network=[]
 			
 			#gene_in_reconstructed_network is set of the genes in reconstructed network.
 			gene_in_reconstructed_network=set()
 		
-			#sort genes by t-statistics			
+			#sort genes by t-statistics.			
 			mRNA_t_sort=self.mRNA_ttest[foldnum].sort_values(by=0,ascending=False)
 			CNA_t_sort=self.CNA_ttest[foldnum].sort_values(by=0,ascending=False)
 			met_t_sort=self.met_ttest[foldnum].sort_values(by=0,ascending=False)
 			snp_t_sort=self.snp_ttest[foldnum].sort_values(by=0,ascending=False)
 			
-			#selected_by_ttest is set of the top N genes which have high absolute values of t-statistics in mRNA, CNA, methylation, and SNP data.
+			#selected_by_ttest is set of the top N genes which have high absolute values of t-statistics in mRNA, CNA, methylation, or SNP data.
 			selected_by_ttest=set()
 			selected_by_ttest.update(mRNA_t_sort.index[:self.n_gene_in_ttest])
 			selected_by_ttest.update(CNA_t_sort.index[:self.n_gene_in_ttest])
 			selected_by_ttest.update(met_t_sort.index[:self.n_gene_in_ttest])
 			selected_by_ttest.update(snp_t_sort.index[:self.n_gene_in_ttest])
 			
-			
+			#construct a network including all edges involving at least one of the genes belonging to selected_by_ttest.
 			for edge in self.edge_list:
 				if edge[0] in selected_by_ttest or edge[1] in selected_by_ttest:
 					reconstructed_network.append(edge)
@@ -441,11 +458,12 @@ class PM:
 			gene_in_reconstructed_network_10fold.append(gene_in_reconstructed_network)
 		return reconstructed_network_10fold,gene_in_reconstructed_network_10fold
 		
-	#Step 2-1. make data for GANs. for each gene, select the dataset with the largest absolute value of t-test statistic.
+	#step 2-1. make data for GANs. 
 	#foldnum is fold number.
 	#network is the gene in reconstruct in the fold.
 	def mk_data_for_GANs(self,networkgene,foldnum):
 		
+		#merge traing samples. 
 		trainsample=np.hstack((self.good_train_samples[foldnum],self.bad_train_samples[foldnum]))
 		random.seed(0) 
 		
@@ -455,7 +473,7 @@ class PM:
 		#result_tmp is the data for GANs.
 		result_tmp=[]
 		
-		# for each gene in reconstructed network, select the dataset with the largest absolute value of t-test statistic.
+		#for each gene in reconstructed network, select the dataset with the largest absolute value of t-test statistic.
 		for j in networkgene:
 			genevec=[self.mRNA_ttest[foldnum].loc[j,0],self.CNA_ttest[foldnum].loc[j,0],self.met_ttest[foldnum].loc[j,0],self.snp_ttest[foldnum].loc[j,0]]
 			num=np.argmax(genevec)
@@ -469,11 +487,11 @@ class PM:
 				result_tmp.append(self.snp.loc[j,trainsample].values.astype('float64'))
 		return result_tmp
 	
-	#Step 2-2. learn reconstructed FIs network using GANs.
+	#step 2-2. learn reconstructed FIs network using GANs.
 	#process_number is process number. 
-	#edge_list is the edges of FIs network.
+	#edge_list is the edges of FIs network in the fold.
 	#data_for_GANs is the data we made in step 2-1.
-	#foldnum is the fold number
+	#foldnum is the fold number.
 	def Learning_FIsnetwork_GANs(self,process_number,edge_list,data_for_GANs,foldnum,output):
 		
 		#creat adjacency matrix from reconstructed FIs network.
@@ -485,57 +503,58 @@ class PM:
 				matrix[x][y] = matrix[y][x] = 1.
 			return matrix
 		
-		#make variables
-		#adjacency_matrix is the data we made in step 2-1.
-		#n_input is the number of genes in reconstructed FIs network.
-		#n_noist is the number of genes in reconstructed FIs network.
-		
+		#prepare for GANs.
 		def prepare(adjacency_matrix,n_input,n_hidden,n_noise,stddev):
 			reconstucted_network_adjacency_matrix = tf.constant(adjacency_matrix)
+			
+			#input.
 			X = tf.placeholder(tf.float32, [None, n_input])
-
+			
+			#noise for generator.
 			Z = tf.placeholder(tf.float32, [None, n_noise])
-			#G_W is generator weights
+			#G_W is for generator.
 			G_W = tf.Variable(tf.random_normal([n_noise, n_genes], stddev=0.01))
 			
-			#D_W1 is discriminator weights
+			#D_W1 is for discriminator.
 			D_W1 = tf.Variable(tf.random_normal([n_input, n_hidden], stddev=0.01))
 			
-			#D_W2 is discriminator weights
+			#D_W2 is for discriminator.
 			D_W2 = tf.Variable(tf.random_normal([n_hidden, 1], stddev=0.01))
 			
 			return reconstucted_network_adjacency_matrix,X,Z,G_W,D_W1,D_W2
 		
-		#generator of GANs 
+		#generator of GANs.
 		def generator(G_W,reconstucted_network_adjacency_matrix,noise_z):
 			output = tf.nn.relu(tf.matmul(noise_z, reconstucted_network_adjacency_matrix*(G_W*tf.transpose(G_W))))	   
 			return output
-		#generator of GANs 
+			
+		#discriminator of GANs.
 		def discriminator(inputs,D_W1,D_W2):
 			hidden = tf.nn.relu(tf.matmul(inputs, D_W1))
 			output = tf.nn.sigmoid(tf.matmul(hidden, D_W2))
 			return output
-		#make random variables to make fake data. 
+			
+		#make random variables for generator.
 		def get_noise(batch_size, n_noise):
 			return np.random.normal(size=(batch_size, n_noise))
 			
 		print(' start process	process number : ',process_number,'	fold number :',foldnum)
 		
-		#get set of genes from reconstructed FIs network
+		#get a set of genes from reconstructed FIs network.
 		total_gene=[]
 		for i in edge_list:
 			total_gene.append(i[0])
 			total_gene.append(i[1])
 		total_gene=set(total_gene)
 		
-		#make series to map between gene and number only for GANs
+		#make series to map between genes and genes number only for GANs.
 		gene2num_forGANs = {}
 		num2gene_forGANs = {}
 		for i, gene in enumerate(total_gene):
 			gene2num_forGANs[gene] = i
 			num2gene_forGANs[i] = gene	
 		
-		#n_genes is the length of set of genes from reconstructed FIs network
+		#n_genes is the length of set of genes from reconstructed FIs network.
 		n_genes = len(total_gene)
 		
 		data_for_GANs=np.array(data_for_GANs)
@@ -544,15 +563,13 @@ class PM:
 		#creat adjacency matrix from reconstructed FIs network.
 		adjacency_matrix = make_adjacencyMatrix_for_GANs(n_genes,edge_list)
 		
-		#set the parameters		
+		#set the parameters.		
 		tf.set_random_seed(process_number)
 		batch_size = 1
 		learning_rate = 0.0002
 
 		
-		
-		#make variables
-		#reconstucted_network_adjacency_matrix is adjacency matrix of reconstructed FIs network.
+		#reconstucted_network_adjacency_matrix is an adjacency matrix of reconstructed FIs network.
 		reconstucted_network_adjacency_matrix,X,Z,G_W,D_W1,D_W2=prepare(adjacency_matrix,n_genes,256,n_genes,0.01)
 
 		G = generator(G_W,reconstucted_network_adjacency_matrix,Z)
@@ -560,7 +577,8 @@ class PM:
 		D_gene = discriminator(G,D_W1,D_W2)
 
 		D_real = discriminator(X,D_W1,D_W2)
-
+		
+		#loss function.
 		loss_D = tf.reduce_mean(tf.log(D_real) + tf.log(1 - D_gene))
 
 		loss_G = tf.reduce_mean(tf.log(D_gene))
@@ -568,7 +586,7 @@ class PM:
 		D_var_list = [D_W1, D_W2]
 		G_var_list = [G_W]
 
-		#define optimizer
+		#define optimizer.
 		train_D = tf.train.AdamOptimizer(learning_rate).minimize(-loss_D, var_list=D_var_list)
 		train_G = tf.train.AdamOptimizer(learning_rate).minimize(-loss_G, var_list=G_var_list)
 		
@@ -582,7 +600,7 @@ class PM:
 		loss_val_D_list_tmp=0
 		loss_val_G_list_tmp=0
 		
-		#perform GANs
+		#perform GANs.
 		for epoch in range(2):
 			for i in range(n_iter):
 				batch_xs = data_for_GANs[i].reshape(1,-1)
@@ -603,7 +621,7 @@ class PM:
 		
 		network = sess.run(reconstucted_network_adjacency_matrix*(G_W*tf.transpose(G_W)))
 		
-		#rearrange result of GANs.
+		#rearrange the result of GANs.
 		result = []
 		for n in range(0, len(network)):
 			for m in range(n+1, len(network[n])):
@@ -613,8 +631,8 @@ class PM:
 	  
 		output.put(result)
 	
-	#perform pagerank
-	#weight is the weights which is obtained from Step2.
+	#function for pagerank.
+	#weight is obtained from GANs.
 	def pagerank(self,weight):
 	
 		
@@ -622,7 +640,7 @@ class PM:
 		damping_factor=self.damping_factor
 		threshold=0.005
 		
-		#make graph with GANs weight
+		#make graph with GANs weight.
 		def mk_graph_with_weight(n_genes,weight):
 			matrix = np.zeros([n_genes,n_genes], dtype=np.float32)
 			count=0
@@ -643,7 +661,7 @@ class PM:
 		n_genes=len(self.mRNA.index)
 		result_mat = mk_graph_with_weight(n_genes,weight)
 
-	  ## 4. PageRank
+		#step 2. pageRank.
 		def perform_pagerank(matrix, d, threshold):
 			n_genes = matrix.shape[0]
 			score = np.ones(n_genes) / n_genes
@@ -657,14 +675,14 @@ class PM:
 				else:
 					tmp = deepcopy(score)
 			return score
-		#Perform pagerank
+		#perform pagerank.
 		score = perform_pagerank(result_mat, damping_factor, threshold)
 		
-		#sort gene by pagerank score
+		#sort gene by pagerank score.
 		result=DataFrame(score)
 		result_gene=result.sort_values(by=0,ascending=False).index
 		
-		#select biomarker using pargerank score
+		#select biomarker using pargerank score.
 		real_result=[]
 		for x in result_gene:  
 			real_result.append(self.num2gene[x])
@@ -674,7 +692,7 @@ class PM:
 	
 	
 	
-	#create adjacency matrix form edge_list
+	#create adjacency matrix form edge_list.
 	def make_adjacencyMatrix(self,edge_list):
 		n_genes=len(self.mRNA.index)
 		matrix = np.zeros([n_genes,n_genes], dtype=np.float32)
@@ -686,73 +704,73 @@ class PM:
 			matrix[y][x] =1
 		return matrix
 	
-	#measure the prognostic accuracy using area under the curve(auc)
+	#measure the area under the curve(AUC).
 	def auc(self,reconstructed_FIs,biomarkerperfold) :
 		
-		#names is the list of the names of classifiers
+		#names is the list of the names of classifiers.
 		names = [n for n in range(6)]
 		
-		#classi is the series in which data is the result of auc for each fold and index is the name of the classifiers
+		#classi is the series in which data is the result of AUC for each fold and index is the name of the classifiers.
 		classi={}
 		for i in names:
 			classi[i]=list()
 		
 		for foldnum in range(10):
-			#sample is the samples for train 
+			#sample is a numpy array of the training samples.
 			sample=np.hstack((self.good_train_samples[foldnum],self.bad_train_samples[foldnum]))
 			
-			#test_sample is the samples for test
+			#test_sample is a list of test samples.
 			test_sample=self.test_samples[foldnum]
 			random.shuffle(sample)
 			
-			
-			
-			#edge_list is the list of the edges in reconstruct FIs network of the fold
+						
+			#edge_list is the list of the edges in reconstructed FIs network of the fold.
 			edge_list=reconstructed_FIs[foldnum]
 			edge_list=np.array(edge_list)
 
 
 
-			#make data for AUC
+			#from here, make data for AUC.
+			
+			
 			selected_by_ttest=set()
-			
-			
+
 			#sort genes by t-statistics
 			mRNA_ttest=self.mRNA_ttest[foldnum].sort_values(by=0,ascending=False)
 			CNA_ttest=self.CNA_ttest[foldnum].sort_values(by=0,ascending=False)
 			met_ttest=self.met_ttest[foldnum].sort_values(by=0,ascending=False)
 			snp_ttest=self.snp_ttest[foldnum].sort_values(by=0,ascending=False)
 			
-			#mRNA_t is the list of genes which have high absolute values of t-statistics in mRNA data and were used to reconstruct FIs network in step 1.
+			#mRNA_t is the list of genes which have high absolute values of t-statistics in mRNA data and were used to reconstructed FIs network in step 1.
 			mRNA_t=mRNA_ttest.index[:self.n_gene_in_ttest]
-			#CNA_t is the list of genes which have high absolute values of t-statistics in CNA data and were used to reconstruct FIs network in step 1.
+			#CNA_t is the list of genes which have high absolute values of t-statistics in CNA data and were used to reconstructed FIs network in step 1.
 			CNA_t=CNA_ttest.index[:self.n_gene_in_ttest]
-			#met_t is the list of genes which have high absolute values of t-statistics in methylation data and were used to reconstruct FIs network in step 1.
+			#met_t is the list of genes which have high absolute values of t-statistics in methylation data and were used to reconstructed FIs network in step 1.
 			met_t=met_ttest.index[:self.n_gene_in_ttest]
-			#snp_t is the list of genes which have high absolute values of t-statistics in SNP data and were used to reconstruct FIs network in step 1.
+			#snp_t is the list of genes which have high absolute values of t-statistics in SNP data and were used to reconstructed FIs network in step 1.
 			snp_t=snp_ttest.index[:self.n_gene_in_ttest]
 			
-			# make union of mRNA_t,CNA_t,met_t and snp_t
+			# make union of mRNA_t,CNA_t,met_t and snp_t.
 			selected_by_ttest.update(mRNA_t)
 			selected_by_ttest.update(CNA_t)
 			selected_by_ttest.update(met_t)
 			selected_by_ttest.update(snp_t)
 			
 			
-			#data_tmp is the data for training
+			#data_tmp is the data for training.
 			data_tmp=[]
-			#test_tmp is the data for test
+			#test_tmp is the data for test.
 			test_tmp=[]
 			
-			#adjacency_matrix of reconstructed FIs network in the fold
+			#adjacency_matrix of reconstructed FIs network in the fold.
 			flag=self.make_adjacencyMatrix(edge_list)
 			
-			#biomarker is the list of genes which were selected in step 2 and 3.
+			#biomarker is the list of genes which were selected in step 2 and 3 for the fold (foldnum is fold number).
 			biomarker=biomarkerperfold[foldnum]
 
 			#decide the dataset per gene.
 			for bi in biomarker:
-				#if the gene belongs to mRNA_t,CNA_t,met_t and snp_t, select the dataset of mRNA, CNA, methylation and SNP respectly for the gene.
+				#if the gene belongs to mRNA_t,CNA_t,met_t or snp_t, select the dataset of mRNA, CNA, methylation or SNP respectly for the gene.
 				if bi in selected_by_ttest:
 					if bi in mRNA_t:
 						data_tmp.append(self.mRNA.ix[bi,sample].values.astype('float64'))
@@ -767,7 +785,7 @@ class PM:
 						data_tmp.append(self.snp.ix[bi,sample].values.astype('float64'))
 						test_tmp.append(self.snp.ix[bi,test_sample].values.astype('float64'))
 				else:
-					#if the gene doesn't belongs to mRNA_t,CNA_t,met_t and snp_t, select the dataset that neighboring genes belong the most.
+					#if the gene doesn't belongs to mRNA_t,CNA_t,met_t and snp_t, select the dataset that neighboring genes belong to the most.
 					
 					#m_score,c_score,t_score and s_score are scores that count how many neighboring genes belong to mRNA_t, CNA_t, met_t and snp_t respectly.
 					m_score=0
@@ -787,7 +805,7 @@ class PM:
 							if adj_gene in snp_t:
 								s_score+=1 
 								
-					#select the dataset that neighboring genes belong the most.
+					#select the dataset that neighboring genes belong to the most.
 					total=[m_score,c_score,t_score,s_score]
 					tmp=[i for i, j in enumerate(total) if j == max(total)]
 					if 0 in tmp:
@@ -807,6 +825,7 @@ class PM:
 			testdata = np.array(test_tmp).T
 			testlable = self.lable[test_sample].values.astype(np.int)
 			trainlable = self.lable[sample].values.astype(np.int)
+			
 			rand=0
 			#classifiers is the list of classifiers.
 			classifiers = [
@@ -817,7 +836,7 @@ class PM:
 				MLPClassifier(hidden_layer_sizes=([10]), alpha = 150, max_iter=3000, random_state=rand),
 				MLPClassifier(hidden_layer_sizes=([10]), alpha = 200, max_iter=3000, random_state=rand)
 			]
-			#perfom area under the curve 
+			#measure area under the curve. 
 			aucs =[]		 
 			for name, clf in zip(names, classifiers) :	 
 				pipe_lr = Pipeline([('clf', clf)])	
@@ -825,7 +844,7 @@ class PM:
 				fpr, tpr, thresholds = roc_curve(testlable,probas_[:,1])
 				roc_auc = auc(fpr, tpr)
 				classi[name].append(roc_auc)
-		#calculate average of AUC in 10 fold validation
+		#calculate average of AUCs in 10 fold validation.
 		total=[]
 		for i in names:
 			total.append(classi[i])
