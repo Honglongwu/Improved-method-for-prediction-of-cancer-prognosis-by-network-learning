@@ -195,9 +195,9 @@
      layer= [10]    alpha=  150     10fold AUC=      0.752962962962963
      layer= [10]    alpha=  200     10fold AUC=      0.7476719576719577
 
-##Output File
-  -File name: ProposedMethod_biomarker_per_fold.npy
-  -This is a numpy array of lists containing the selected biomarkers of each fold.
+## Output File
+  - File name: ProposedMethod_biomarker_per_fold.txt
+  - Selected biomarkers of each fold.
   
 
 
