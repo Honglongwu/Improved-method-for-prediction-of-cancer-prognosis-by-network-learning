@@ -57,15 +57,15 @@
               gene4, gene5
          
 ## 3. Run
-   ##### python ImprovedMethod.py [-t topNgeneInTTest][-i iteration][-n ngene][-d dampingfactor][-l limit_of_iteration] mRNA CNA METHYLATION SNP CLINICAL_FILE NETWORK
+   ##### python ImprovedMethod.py [-t topNgeneInTTest][-i n_experiment][-n ngene][-d dampingfactor][-l limit_of_experiment] mRNA CNA METHYLATION SNP CLINICAL_FILE NETWORK
   
 
     
     - topNgeneInTTest : Top N gene showed statistical differences between the means of good and poor sample groups. ( Default: 400 )
-    - iteration: to select a stable and robust feature for random initialization of weights, N iteration in GANs and PageRank. ( Default : 5 )
+    - n_experiment: to select a stable and robust feature for random initialization of weights, experiment N times in GANs and PageRank step. ( Default : 5 )
     - ngene : N genes selected as biomarker. ( Default: 250 )
     - dampingfactor : damping factor in PageRank. ( Default: 0.7 )
-    - limit_of_iteration : Parameter of step2,3. When step2 and step3 are repeated N times, the genes that appeared K times in N times is selected as biomarkers. The K is the limit of iteration. ( Default : 5)
+    - limit_of_experiment : Parameter of step2,3. When step2 and step3 are repeated N times, the genes that appeared K times in N times is selected as biomarkers. The K is the limit of experiemnt. ( Default : 5)
 
 ###  For Example> 
 #### python ImprovedMethod.py BRCA_mRNA.txt BRCA_CNA.txt BRCA_methylation.txt BRCA_SNP.txt BRCA_clinical.txt FIsnetwork.txt
