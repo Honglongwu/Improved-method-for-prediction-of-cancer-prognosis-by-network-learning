@@ -43,7 +43,9 @@
                gene2,0,0,4
               
    ##### (5) CLINICAL_FILE
-          :Comma-delimited file of Patient's names and osevent
+          : Comma-delimited file of Patient's names and osevent
+          : Lable 0 = patient who has good prognosis
+          : Lable 1 = patient who has bad prognosis 
            Ex) patient1,0
                patient2,1
                patient3,0     
