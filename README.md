@@ -57,7 +57,7 @@
               gene4, gene5
          
 ## 3. Run
-   ##### python ImprovedMethod.py [-t topNgeneInTTest][-i n_experiment][-n ngene][-d dampingfactor][-l limit_of_experiment] mRNA CNA METHYLATION SNP CLINICAL_FILE NETWORK
+   ##### python ProposedMethod.py [-t topNgeneInTTest][-i n_experiment][-n ngene][-d dampingfactor][-l limit_of_experiment] mRNA CNA METHYLATION SNP CLINICAL_FILE NETWORK
   
 
     
@@ -68,7 +68,7 @@
     - limit_of_experiment : Parameter of step2,3. When step2 and step3 are repeated N times, the genes that appeared K times in N times is selected as biomarkers. The K is the limit of experiemnt. ( Default : 5)
 
 ###  For Example> 
-#### python ImprovedMethod.py BRCA_mRNA.txt BRCA_CNA.txt BRCA_methylation.txt BRCA_SNP.txt BRCA_clinical.txt FIsnetwork.txt
+#### python ProposedMethod.py BRCA_mRNA.txt BRCA_CNA.txt BRCA_methylation.txt BRCA_SNP.txt BRCA_clinical.txt FIsnetwork.txt
 
     
     1.preprocessing data...
