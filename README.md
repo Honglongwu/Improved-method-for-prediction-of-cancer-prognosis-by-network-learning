@@ -50,22 +50,21 @@
                patient2,1
                patient3,0     
   ##### (6) NETWORK
-          : Comma-delimited file of PPI network
+          : Comma-delimited file of functional interaction network
            EX) GENE,GENE
               gene1, gene2
               gene1, gene3
               gene4, gene5
          
 ## 3. Run
-   ##### python ProposedMethod.py [-t topNgeneInTTest][-i n_experiment][-n ngene][-d dampingfactor][-l limit_of_experiment] mRNA CNA METHYLATION SNP CLINICAL_FILE NETWORK
+   ##### python ProposedMethod.py [-t top_n_gene_in_ttest][-i n_experiment][-n n_gene][-d dampingfactor][-l limit_of_experiment] mRNA CNA METHYLATION SNP CLINICAL_FILE NETWORK
   
-
     
-    - topNgeneInTTest : Top N gene showed statistical differences between the means of good and poor sample groups. ( Default: 400 )
-    - n_experiment: to select a stable and robust feature for random initialization of weights, experiment N times in GANs and PageRank step. ( Default : 5 )
-    - ngene : N genes selected as biomarker. ( Default: 250 )
-    - dampingfactor : damping factor in PageRank. ( Default: 0.7 )
-    - limit_of_experiment : Parameter of step2,3. When step2 and step3 are repeated N times, the genes that appeared K times in N times is selected as biomarkers. The K is the limit of experiemnt. ( Default : 5)
+    - top_n_gene_in_ttest : Parameter of step 1. Top N gene showed statistical differences between good samples and poor samples in t-test. ( Default: 400 )
+    - n_experiment: Parameter of step 2 and step 3 (t in paper). To select a stable and robust feature for random initialization of weights, experiment t times repeatedly in GANs and PageRank step. ( Default : 5 )
+    - n_gene : Parameter of step 3 . The number of biomarkers selected for each experiment. ( Default: 250 )
+    - dampingfactor : Parameter of step 3. This is damping factor using in PageRank algorithm ( Default: 0.7 )
+    - limit_of_experiment : Parameter of step 2,3 (b in paper). when step 2 and step 3 are experimented t times repeatedly, the genes that appeared b times in t experiment are selected as biomarkers. The b is the limit of experiment. ( Default: 5 )
 
 ###  For Example> 
 #### python ProposedMethod.py BRCA_mRNA.txt BRCA_CNA.txt BRCA_methylation.txt BRCA_SNP.txt BRCA_Clinical.txt FIsnetwork.txt
