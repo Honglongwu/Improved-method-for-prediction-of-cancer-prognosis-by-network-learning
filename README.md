@@ -60,7 +60,7 @@
    ##### python ProposedMethod.py [-t top_n_gene_in_ttest][-i n_experiment][-n n_gene][-d dampingfactor][-l limit_of_experiment] mRNA CNA METHYLATION SNP CLINICAL_FILE NETWORK
   
     
-    - top_n_gene_in_ttest : Parameter of step 1. Top N gene showed statistical differences between good samples and poor samples in t-test. ( Default: 400 )
+    - top_n_gene_in_ttest : Parameter of step 1. Top N genes show statistical differences between good samples and poor samples in t-test. ( Default: 400 )
     - n_experiment: Parameter of step 2 and step 3 (t in paper). To select a stable and robust feature for random initialization of weights, experiment t times repeatedly in GANs and PageRank step. ( Default : 5 )
     - n_gene : Parameter of step 3 . The number of biomarkers selected for each experiment. ( Default: 250 )
     - dampingfactor : Parameter of step 3. This is damping factor using in PageRank algorithm ( Default: 0.7 )
