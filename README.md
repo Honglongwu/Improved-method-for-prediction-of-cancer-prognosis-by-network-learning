@@ -61,7 +61,7 @@
   
     
     - top_n_gene_in_ttest : Parameter of step 1. Top N genes show statistical differences between good samples and poor samples in t-test. ( Default: 400 )
-    - n_experiment: Parameter of step 2 and step 3 (t in paper). To select a stable and robust feature for random initialization of weights, experiment t times repeatedly in GANs and PageRank step. ( Default : 5 )
+    - n_experiment : Parameter of step 2 and step 3 (t in paper). To select a stable and robust feature for random initialization of weights, experiment t times repeatedly in GANs and PageRank step. ( Default : 5 )
     - n_gene : Parameter of step 3 . The number of biomarkers selected for each experiment. ( Default: 250 )
     - dampingfactor : Parameter of step 3. This is damping factor using in PageRank algorithm ( Default: 0.7 )
     - limit_of_experiment : Parameter of step 2,3 (b in paper). when step 2 and step 3 are experimented t times repeatedly, the genes that appeared b times in t experiment are selected as biomarkers. The b is the limit of experiment. ( Default: 5 )
